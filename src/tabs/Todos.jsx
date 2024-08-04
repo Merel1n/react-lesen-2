@@ -1,9 +1,14 @@
-import { Text, Form, TodoList } from 'components';
+import { Text, Form, TodoList, EditForm } from 'components';
 import { nanoid } from 'nanoid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const Todos = () => {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => {
+    const savedTodos = window.localStorage.getItem('saved-todos');
+    return savedTodos ? JSON.parse(savedTodos) : [];
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentTodo, setCurrentTodo] = useState({});
   const addTodo = text => {
     const newTodo = {
       id: nanoid(),
@@ -12,11 +17,51 @@ export const Todos = () => {
     setTodos([...todos, newTodo]);
   };
 
+  useEffect(() => {
+    window.localStorage.setItem('saved-todos', JSON.stringify(todos));
+  }, [todos]);
+
+  const handleDeleteTodo = id => {
+    setTodos(prevTodos => {
+      return prevTodos.filter(todo => todo.id !== id);
+    });
+  };
+  const handleEditTodo = todo => {
+    setIsEditing(true);
+    setCurrentTodo(todo);
+  };
+
+  const handleUpdateTodo = updatedText => {
+    setTodos(
+      todos.map(todo =>
+        todo.id === currentTodo.id ? { ...todo, text: updatedText } : todo,
+      ),
+    );
+    handleCancelEdit();
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setCurrentTodo({});
+  };
+
   return (
     <>
-      <Form addTodo={addTodo} />
+      {isEditing ? (
+        <EditForm
+          updateTodo={handleUpdateTodo}
+          cancelUpdate={handleCancelEdit}
+          defaultValue={currentTodo.text}
+        />
+      ) : (
+        <Form addTodo={addTodo} />
+      )}
       {todos.length > 0 ? (
-        <TodoList todosData={todos} />
+        <TodoList
+          todosData={todos}
+          onDelete={handleDeleteTodo}
+          onEdit={handleEditTodo}
+        />
       ) : (
         <Text textAlign="center">There are no any todos ...</Text>
       )}
