@@ -1,3 +1,12 @@
-export const TodoList = () => {
-  return <h3>TodoList</h3>;
+import { Grid, GridItem, TodoListItem } from 'components';
+export const TodoList = ({ todosData }) => {
+  return (
+    <Grid>
+      {todosData.map(() => (
+        <GridItem>
+          <TodoListItem />
+        </GridItem>
+      ))}
+    </Grid>
+  );
 };
