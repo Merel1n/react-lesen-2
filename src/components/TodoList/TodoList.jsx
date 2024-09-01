@@ -1,5 +1,8 @@
 import { Grid, GridItem, TodoListItem } from 'components';
-export const TodoList = ({ todosData, onDelete, onEdit }) => {
+import { useSelector } from 'react-redux';
+import { selectTodos } from 'reduxStore/todosSlice';
+export const TodoList = ({ onDelete, onEdit }) => {
+  const todosData = useSelector(selectTodos);
   return (
     <Grid>
       {todosData.map((todoItem, index) => (

@@ -1,9 +1,12 @@
 import { Text, Form, TodoList, EditForm } from 'components';
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { selectTodos } from 'reduxStore/todosSlice';
 
 export const Todos = () => {
-  const [todos, setTodos] = useState(() => {
+  const todos = useSelector(selectTodos);
+  const [, setTodos] = useState(() => {
     const savedTodos = window.localStorage.getItem('saved-todos');
     return savedTodos ? JSON.parse(savedTodos) : [];
   });
@@ -57,11 +60,7 @@ export const Todos = () => {
         <Form addTodo={addTodo} />
       )}
       {todos.length > 0 ? (
-        <TodoList
-          todosData={todos}
-          onDelete={handleDeleteTodo}
-          onEdit={handleEditTodo}
-        />
+        <TodoList onDelete={handleDeleteTodo} onEdit={handleEditTodo} />
       ) : (
         <Text textAlign="center">There are no any todos ...</Text>
       )}
