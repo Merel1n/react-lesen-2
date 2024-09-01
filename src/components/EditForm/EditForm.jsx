@@ -2,12 +2,26 @@ import style from './EditForm.module.css';
 
 import { RiSaveLine } from 'react-icons/ri';
 import { MdOutlineCancel } from 'react-icons/md';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCurrentTodo, setCurrentTodo } from 'reduxStore/todosSlice';
+import { updateTodo } from 'reduxStore/todosOps';
 
-export const EditForm = ({ updateTodo, cancelUpdate, defaultValue }) => {
+export const EditForm = () => {
+  const dispatch = useDispatch();
+  const cancelUpdate = () => {
+    dispatch(setCurrentTodo(null));
+  };
+  const todo = useSelector(selectCurrentTodo);
   const handleSubmit = event => {
     event.preventDefault();
     const inputValue = event.target.elements.text.value.trim();
-    updateTodo(inputValue);
+    // updateTodo(inputValue);
+    dispatch(
+      updateTodo({
+        id: todo.id,
+        text: inputValue,
+      }),
+    );
     event.target.reset();
   };
 
@@ -26,7 +40,7 @@ export const EditForm = ({ updateTodo, cancelUpdate, defaultValue }) => {
         placeholder="What do you want to write?"
         name="text"
         required
-        defaultValue={defaultValue}
+        defaultValue={todo.text}
         autoFocus
       />
     </form>
