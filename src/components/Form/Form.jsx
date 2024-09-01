@@ -1,10 +1,19 @@
 import { FiSearch } from 'react-icons/fi';
 import style from './Form.module.css';
-export const Form = ({ addTodo }) => {
+import { useDispatch } from 'react-redux';
+import { addTodo } from 'reduxStore/todosOps';
+
+export const Form = () => {
+  const dispatch = useDispatch();
+
   const handleSubmit = e => {
     e.preventDefault();
     const valueTodo = e.target.search.value.trim();
-    addTodo(valueTodo);
+    // addTodo(valueTodo);
+    const newTodo = {
+      text: valueTodo,
+    };
+    dispatch(addTodo(newTodo));
     e.target.reset();
   };
   return (

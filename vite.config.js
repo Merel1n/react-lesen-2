@@ -11,6 +11,7 @@ export default defineConfig({
       tabs: '/src/tabs',
       apiService: '/src/apiService',
       hooks: '/src/hooks',
+      reduxStore: '/src/reduxStore',
     },
   },
 });
